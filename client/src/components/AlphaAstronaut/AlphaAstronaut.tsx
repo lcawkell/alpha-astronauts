@@ -25,9 +25,6 @@ export function AlphaAstronaut (props: IAlphaAstronautProps) {
         <div className={`${css.imageContainerInner} ${selectedCSS}`} onClick={()=>onClick()}>
             <img src={props.image} className={css.img} />
             {isPendingLoading}
-            <div>
-
-            </div>
             <p className={css.description}>#{props.edition}</p>
         </div>
     </div>
