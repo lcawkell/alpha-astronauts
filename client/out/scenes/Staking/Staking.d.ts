@@ -23,6 +23,7 @@ export interface IStakingState {
     loading: boolean;
     stakedContainerLoading: boolean;
     astroContainerLoading: boolean;
+    moonRockBalance?: number;
 }
 export default class Home extends React.Component<IStakingProps, IStakingState> {
     constructor(props: IStakingProps);
@@ -49,6 +50,9 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
     connectToWallet(): Promise<void>;
     checkWeb3Connection: () => Promise<void>;
     loadBlockchainData(account: string): Promise<void>;
+    calculateMRBalance(): Promise<void>;
+    getMRBalance(): JSX.Element;
+    getPendingRewards(): JSX.Element;
     renderDAPP(): JSX.Element;
     renderWalletPrompt(connectToWallet: any): JSX.Element;
     render(): JSX.Element;

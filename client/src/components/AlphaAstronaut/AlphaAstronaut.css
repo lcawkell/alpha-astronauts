@@ -8,11 +8,12 @@
 }
 
 .selected {
-    outline: 2px solid blue!important;
+    outline: 3px solid #50e0cd!important;
 }
 
 .selected:hover {
-    outline: 4px solid blue!important;
+    outline: none;
+    box-shadow: 1px 1px 7px #50e0cd;
 }
 
 .notSelected {
@@ -25,7 +26,8 @@
 }
 
 .imageContainerInner:hover {
-    outline: 2px solid red;
+    outline: none;
+    box-shadow: 1px 1px 7px #50e0cd;
 }
 
 .description {

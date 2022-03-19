@@ -4,10 +4,12 @@ declare namespace StakingCssNamespace {
     bigConnectButton: string;
     button: string;
     container: string;
+    coverSpin: string;
     headingContainer: string;
     hiddenContainer: string;
     rewards: string;
     root: string;
+    spin: string;
     validationMessage: string;
     walletConnector: string;
   }

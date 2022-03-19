@@ -11,9 +11,7 @@ import { Astronaut as Astronaut } from '../../types';
 const MOONROCK_CONTRACT_ADDRESS = '0x30947d2Cc30335ecFb302115688a805487A2dD6F';
 const ASTRO_CONTRACT_ADDRESS = '0x52e037160C70bE63c1f79dd507E4879C032207d0';
 
-export interface IStakingProps {
-
-}
+export interface IStakingProps {}
 
 export interface IStakingState {
     web3?:Web3;
@@ -34,6 +32,7 @@ export interface IStakingState {
     loading: boolean;
     stakedContainerLoading: boolean;
     astroContainerLoading: boolean;
+    moonRockBalance?: number;
 }
 
 declare let window:any;
@@ -85,6 +84,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
             await this.loadAstronauts();
             this.calculateTotalRewards();
             this.calculatePendingRewards();
+            this.calculateMRBalance();
             return;
         }
         setTimeout(()=>this.loadDAPP(), 500);
@@ -300,7 +300,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
             this.setState({web3:new Web3(window.ethereum)});
         }
         else {
-            window.alert('Non ethereum browser detected. You should consider Metamask!')
+            
         }
     }
 
@@ -331,6 +331,31 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
         const networkId = await this.state.web3.eth.net.getId()
     }
 
+    async calculateMRBalance() {
+        let moonRockBalance = await this.state.stakeContract.methods.balanceOf(this.state.account).call() / 1000000000000000000;
+        this.setState({moonRockBalance});
+    }
+
+    getMRBalance() {
+        let moonRockBalance = this.state.moonRockBalance;
+        console.log(moonRockBalance);
+        if(moonRockBalance == null || moonRockBalance == undefined) {
+            return <div className={css.coverSpin}></div>
+        }else {
+            return <span style={{position: 'absolute'}}>{this.state.moonRockBalance}</span>
+        }
+    }
+
+    getPendingRewards() {
+        let pendingRewards = this.state.claimableRewards;
+        console.log(pendingRewards);
+        if(pendingRewards == null || pendingRewards == undefined) {
+            return <div className={css.coverSpin}></div>
+        }else {
+            return <span style={{position: 'absolute'}}>{this.state.claimableRewards}</span>
+        }
+    }
+
 
     public renderDAPP() {
         let containerHideCss = (!this.state.loading && this.state.connected) ? '' : css.hiddenContainer;
@@ -338,7 +363,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
 
             <WalletConnector account={this.state.account} />
 
-            <StakingContainer title='STAKED ASTRONAUTS' details={<span>Pending Rewards: <span>{this.state.claimableRewards}</span></span>} loading={this.state.stakedContainerLoading}>
+            <StakingContainer title='STAKED ASTRONAUTS' details={<span>Pending Rewards: <span style={{position:'relative'}}>{this.getPendingRewards()}</span></span>} loading={this.state.stakedContainerLoading}>
                 {this.state.stakedAstronauts.map(astronaut => <AlphaAstronaut {...astronaut} isPending={this.state.pendingActionAstros.indexOf(astronaut.edition) > -1} selected={this.state.selectedStakedAstronauts.indexOf(astronaut.edition) > -1} onClick={this.toggleStakedAstronautSelected} isStaked={true} />)}
             </StakingContainer>
 
@@ -348,9 +373,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
                 <div className={css.validationMessage}>{this.state.unstakingValidationMessage}</div>
             </div>
 
-            <div id='spacer' style={{height:'35px'}}></div>
-
-            <StakingContainer title='UNSTAKED ASTRONAUTS' loading={this.state.astroContainerLoading} >
+            <StakingContainer title='UNSTAKED ASTRONAUTS' details={<span>MR Balance: <span style={{position:'relative'}}>{this.getMRBalance()}</span></span>} loading={this.state.astroContainerLoading} >
                 {this.state.astronauts.map(astronaut => <AlphaAstronaut {...astronaut} isPending={this.state.pendingActionAstros.indexOf(astronaut.edition) > -1} selected={this.state.selectedAstronauts.indexOf(astronaut.edition) > -1} onClick={this.toggleAstronautSelected} isStaked={false} />)}
             </StakingContainer>
 

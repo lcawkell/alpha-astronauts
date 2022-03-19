@@ -38,7 +38,14 @@
 }
 
 .containerSizing {
-    width: 450px;
+    width: 320px;
+}
+
+@media only screen and (min-width : 482px) {
+    .containerSizing {
+        width: 500px;
+        height: 450px;
+    }
 }
 
 @media only screen and (min-width : 992px) {
@@ -53,6 +60,7 @@
     align-items: center;
     justify-content: space-evenly;
     color: #fff;
+    flex-direction: column;
 }
 
 .title {
