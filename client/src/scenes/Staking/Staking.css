@@ -5,7 +5,18 @@
 
 .container {
     padding: 15px;
+    display: flex;
+    flex-direction: column;
 }
+
+@media only screen and (min-width : 992px) {
+    .container {
+        justify-content: space-between;
+        align-content: space-between;
+        flex-direction: row-reverse;
+    }
+}
+
 
 .button {
     background-color: #232b2b!important;

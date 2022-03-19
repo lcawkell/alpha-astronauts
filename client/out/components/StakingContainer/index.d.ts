@@ -1,1 +1,1 @@
-export { default } from './StakingContainer';
+export { default, IStakingContainerAction } from './StakingContainer';

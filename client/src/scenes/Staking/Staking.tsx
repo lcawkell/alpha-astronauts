@@ -4,7 +4,7 @@ import { Contract } from "web3-eth-contract";
 import { AlphaAstroABI, AlphaStakeABI } from '../../contracts/ABI/AlphaAstroABI';
 import { AlphaAstronaut as AlphaAstronaut } from '../../components/AlphaAstronaut/AlphaAstronaut';
 import css from './Staking.css';
-import StakingContainer from '../../components/StakingContainer';
+import StakingContainer, { IStakingContainerAction } from '../../components/StakingContainer';
 import Button from '../../components/Button';
 import { Astronaut as Astronaut } from '../../types';
 
@@ -34,6 +34,8 @@ export interface IStakingState {
     astroContainerLoading: boolean;
     moonRockBalance?: number;
 }
+
+
 
 declare let window:any;
 
@@ -356,6 +358,32 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
         }
     }
 
+    getStakingContainerActions():IStakingContainerAction[] {
+        return [
+            {
+                name: 'Unstake Selected',
+                action: ()=>this.onClickUnstakeSelected()
+            },
+            {
+                name: 'Harvest All',
+                action: ()=>this.onClickHarvestAll()
+            }
+        ];
+    }
+
+    getAstroContainerActions():IStakingContainerAction[] {
+        return [
+            {
+                name: this.state.isApproved? 'Stake Selected' : 'Approve Use Of Astros',
+                action: ()=>this.onClickApproveOrStake()
+            },
+            {
+                name: 'Stake All',
+                action: ()=>this.onClickStakeAll()
+            }
+        ];
+    }
+
 
     public renderDAPP() {
         let containerHideCss = (!this.state.loading && this.state.connected) ? '' : css.hiddenContainer;
@@ -363,25 +391,13 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
 
             <WalletConnector account={this.state.account} />
 
-            <StakingContainer title='STAKED ASTRONAUTS' details={<span>Pending Rewards: <span style={{position:'relative'}}>{this.getPendingRewards()}</span></span>} loading={this.state.stakedContainerLoading}>
+            <StakingContainer title='STAKED ASTRONAUTS' details={<span>Pending Rewards: <span style={{position:'relative'}}>{this.getPendingRewards()}</span></span>} loading={this.state.stakedContainerLoading} actions={this.getStakingContainerActions()}>
                 {this.state.stakedAstronauts.map(astronaut => <AlphaAstronaut {...astronaut} isPending={this.state.pendingActionAstros.indexOf(astronaut.edition) > -1} selected={this.state.selectedStakedAstronauts.indexOf(astronaut.edition) > -1} onClick={this.toggleStakedAstronautSelected} isStaked={true} />)}
             </StakingContainer>
 
-            <div className={css.actions}>
-                <Button style={css.button} onClick={()=>this.onClickUnstakeSelected()}>Unstake Selected</Button>
-                <Button style={css.button} onClick={()=>this.onClickHarvestAll()}>Harvest All</Button>
-                <div className={css.validationMessage}>{this.state.unstakingValidationMessage}</div>
-            </div>
-
-            <StakingContainer title='UNSTAKED ASTRONAUTS' details={<span>MR Balance: <span style={{position:'relative'}}>{this.getMRBalance()}</span></span>} loading={this.state.astroContainerLoading} >
+            <StakingContainer title='UNSTAKED ASTRONAUTS' details={<span>MR Balance: <span style={{position:'relative'}}>{this.getMRBalance()}</span></span>} loading={this.state.astroContainerLoading} actions={this.getAstroContainerActions()}>
                 {this.state.astronauts.map(astronaut => <AlphaAstronaut {...astronaut} isPending={this.state.pendingActionAstros.indexOf(astronaut.edition) > -1} selected={this.state.selectedAstronauts.indexOf(astronaut.edition) > -1} onClick={this.toggleAstronautSelected} isStaked={false} />)}
             </StakingContainer>
-
-            <div className={css.actions}>
-                <Button style={css.button} onClick={()=>this.onClickApproveOrStake()}>{this.state.isApproved? 'Stake Selected' : 'Approve Use Of Astros'}</Button>
-                <Button style={css.button} onClick={()=>this.onClickStakeAll()}>Stake All</Button>
-                <div className={css.validationMessage}>{this.state.stakingValidationMessage}</div>
-            </div>
 
         </div>);
     }

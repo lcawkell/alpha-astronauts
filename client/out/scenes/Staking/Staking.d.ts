@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Web3 from 'web3';
 import { Contract } from "web3-eth-contract";
+import { IStakingContainerAction } from '../../components/StakingContainer';
 import { Astronaut as Astronaut } from '../../types';
 export interface IStakingProps {
 }
@@ -53,6 +54,8 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
     calculateMRBalance(): Promise<void>;
     getMRBalance(): JSX.Element;
     getPendingRewards(): JSX.Element;
+    getStakingContainerActions(): IStakingContainerAction[];
+    getAstroContainerActions(): IStakingContainerAction[];
     renderDAPP(): JSX.Element;
     renderWalletPrompt(connectToWallet: any): JSX.Element;
     render(): JSX.Element;

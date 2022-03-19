@@ -1,5 +1,7 @@
 declare namespace StakingContainerCssNamespace {
   export interface IStakingContainerCss {
+    actions: string;
+    button: string;
     container: string;
     containerInner: string;
     containerScroll: string;
