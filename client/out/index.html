@@ -1,0 +1,87 @@
+<html lang="en">
+<head>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200&display=swap" rel="stylesheet">
+    <link href="scripts/Draft.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha Astronauts</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "coder","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+            -webkit-font-smoothing: antialiased;
+            margin:0px;
+        }
+
+        #wrapper-main {
+            background-color: var(--primary);
+            background-image: none;
+            background-size: cover;
+            background-position: center center;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #container-main {
+            display: flex;
+            flex: 1 1 0%;
+            flex-direction: column;
+            -webkit-box-pack: start;
+            justify-content: flex-start;
+            -webkit-box-align: center;
+            align-items: center;
+            width: 100%;
+            background-image: url(/bg.png);
+            background-size: cover;
+            background-position: center center;
+            padding: 24px;
+            background-color: var(--primary);
+        }
+
+        #logo {
+            width: 300px;
+        }
+
+        @media only screen and (min-width : 992px) {
+            #profile {
+            display: inline-block;
+            }
+        }
+        
+        @media only screen and (min-width : 992px) {
+            #mobileNavigation {
+            display: none;
+            }
+        }
+        
+        @media only screen and (min-width : 992px) {
+            #header > #menu {
+            display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper-main">
+        <div id="container-main">
+            <img id="logo" alt="logo" src="/logo.png">
+            <div id="alpha-astronauts"></div>
+        </div>
+    </div>
+
+    <!-- <script src="scripts/Navigation.js"></script> -->
+    <script src="scripts/alpha_astronauts.js"></script>
+</body>
+</html>

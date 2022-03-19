@@ -1,0 +1,167 @@
+.root:focus {
+    outline: 2px solid #0680a6!important;
+}
+
+.root {
+    padding: 5px 10px;
+    color: #0680a6;
+    border: none;
+    outline: 1px solid #0680a6;
+    background: #fff;;
+    font-family: Arial;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    margin: 5px 0px;
+    font-size: 15px;
+    font-weight: 400;
+    transition: color .2s ease,background-color .2s ease;
+}
+
+.root:hover {
+    background: #0680a6;
+    color: #fff;
+}
+
+.root:active {
+    outline: 1px solid #0680a6!important;
+}
+
+.rootActive {
+    background: #fff;
+    box-shadow: 0px 3px 0px #00dd00;
+}
+
+.rootActive:hover {
+    background: #fff;
+    color: #0680a6;
+}
+
+.rootActive:focus {
+    outline: 1px solid #0680a6!important;
+    background: #fff;
+    color: #0680a6;
+    box-shadow: 0px 3px 0px #00dd00, 0px 0px 4px #0680a6;
+}
+
+.rootInactive {
+    background: #fff;
+}
+
+.rootInactive:hover {
+    background: #fff;
+    color: #0680a6;
+    box-shadow: 0px 3px 0px #bbb;
+}
+
+.rootInactive:focus {
+    outline: 1px solid #0680a6!important;
+    background: #fff;
+    color: #0680a6;
+    box-shadow: 0px 3px 0px #bbb,  0px 0px 4px #0680a6;
+}
+
+.rootPrimary {
+    padding: 5px 10px;
+    color: #002145;
+    border: none;
+    outline: 1px solid #002145!important;
+    background: #fff;;
+    font-family: Arial;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    margin: 5px 0px;
+    font-size: 15px;
+    font-weight: 400;
+    transition: color .2s ease,background-color .2s ease;
+}
+
+.rootPrimary:hover {
+    background: #002145;
+    color: #fff;
+}
+
+.rootPrimary:focus {
+    outline: 2px solid #002145!important;
+}
+
+.rootPrimary:active {
+    outline: 1px solid #002145!important;
+}
+
+.actionButtonRoot {
+    background: transparent;
+    border: none !important;
+    outline: none !important;
+}
+
+.actionButtonRoot:active {
+    background: transparent;
+    color: #000;
+    border: none !important;
+    outline: none !important;
+}
+
+.actionButtonRoot:focus {
+    background: transparent;
+    color: #000;
+    border: none !important;
+    outline: none !important;
+}
+
+.actionButtonRoot:hover {
+    background: transparent;
+    color: #002145;
+}
+
+.iconButton {
+    background: transparent;
+    fill: #555;
+    min-width: auto;
+    border: none;
+    outline: none!important;
+}
+
+.iconButton:hover {
+    color: #0680a6;
+    background: transparent;
+    fill: #0078D4;
+    border: none;
+    outline: none!important;
+}
+
+.iconButton:active {
+    background: transparent;
+    fill: #002145;
+    color: #002145;
+    border: none;
+    outline: none!important;
+}
+
+.iconButton:focus {
+    background: transparent;
+    fill: #002145;
+    color: #002145;
+    border: none;
+    outline: none!important;
+}
+
+.checkButton {
+
+}
+
+.checkButton:active {
+    background: #2F5D7C;
+    color: white;
+}
+
+.checkButton:hover {
+    background: #EAEAEA;
+    color:  rgba(0,0,0,.6);
+}
+
+.checkButtonActive {
+    background: #002145;
+    color: #fff;
+}

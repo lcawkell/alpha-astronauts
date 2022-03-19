@@ -1,0 +1,42 @@
+{
+    "compilerOptions": {
+        "outDir": "out",
+        "sourceMap": true,
+        "strict": true,
+        "noImplicitAny": false,
+        "module": "commonjs",
+        "target": "es2018",
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "strictNullChecks": false,
+        "moduleResolution": "node",
+        "rootDir": "src",
+        "paths" : {
+          "crypto": ["./node_modules/crypto-browserify"],
+          "stream": ["./node_modules/stream-browserify"],
+          "assert": ["./node_modules/assert"],
+          "http": ["./node_modules/stream-http"],
+          "https": ["./node_modules/https-browserify"],
+          "os": ["./node_modules/os-browserify"],
+        },
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "declaration": true
+    },
+    "include": [
+        "src/**/*",
+        "./scripts", 
+        "./test", 
+        "./typechain"
+    ],
+    "awesomeTypescriptLoaderOptions": {
+      "reportFiles": [
+        "./src/Components/**/*"
+      ],
+      "useBabel": true,
+      "strictNullChecks": false,
+      "noImplicitAny": false,
+      "esModuleInterop": true,
+      "resolveJsonModule": true
+    }
+}
