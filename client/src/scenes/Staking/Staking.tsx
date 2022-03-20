@@ -116,6 +116,10 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
         let stakedAstronauts = this.state.stakedAstronauts.map(stakedAstronaut => stakedAstronaut);
         stakedAstronauts = await this.getAstronautHarvestTimes(stakedAstronauts);
 
+        this.calculatePendingRewards();
+        this.calculateMRBalance();
+
+
         this.setState({stakedAstronauts});
     }
 
