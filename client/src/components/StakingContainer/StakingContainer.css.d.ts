@@ -1,6 +1,7 @@
 declare namespace StakingContainerCssNamespace {
   export interface IStakingContainerCss {
     actions: string;
+    astroDisplay: string;
     button: string;
     container: string;
     containerInner: string;
@@ -14,6 +15,7 @@ declare namespace StakingContainerCssNamespace {
     spin: string;
     stakingInfo: string;
     title: string;
+    titleContainer: string;
     wrapper: string;
   }
 }

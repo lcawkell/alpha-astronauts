@@ -70,6 +70,15 @@
     flex-direction: column;
 }
 
+.titleContainer {
+    display:flex;
+    width: 30%;
+}
+
+.astroDisplay {
+    margin-left: 5px;
+}
+
 .title {
     display: block;
     position: relative;

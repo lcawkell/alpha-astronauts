@@ -5,6 +5,7 @@
 
 .imageContainerInner {
     position: relative;
+    cursor: pointer;
 }
 
 .selected {

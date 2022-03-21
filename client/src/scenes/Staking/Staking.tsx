@@ -76,15 +76,12 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
 
         this.toggleAstronautSelected = this.toggleAstronautSelected.bind(this);
         this.toggleStakedAstronautSelected = this.toggleStakedAstronautSelected.bind(this);
-
-        console.log(await this.state.web3.eth.getBlockNumber());
     }
 
     loadDAPP = async () => {
         if(this.state.connected) {
             await this.isApprovedForAll();
             await this.loadAstronauts();
-            // this.calculateTotalRewards();
             this.calculatePendingRewards();
             this.calculateMRBalance();
             return;
@@ -114,14 +111,13 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
         }catch(e) {
             console.log("Harvest Batch Failed");
         }
-        let stakedAstronauts = this.state.stakedAstronauts.map(stakedAstronaut => stakedAstronaut);
+        let stakedAstronauts = this.state.stakedAstronauts.map(stakedAstronaut => Object.assign({},stakedAstronaut));
         stakedAstronauts = await this.getAstronautHarvestTimes(stakedAstronauts);
 
-        this.calculatePendingRewards();
-        this.calculateMRBalance();
-
-
-        this.setState({stakedAstronauts});
+        this.setState({stakedAstronauts}, ()=> {
+            this.calculatePendingRewards();
+            this.calculateMRBalance();
+        });
     }
 
     async onClickUnstakeSelected() {
@@ -258,14 +254,6 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
         });
     }
 
-    // async calculateTotalRewards() {
-    //     if(this.state.stakedAstronauts.length === 0) return 0;
-    //     let rewardsArray = await Promise.all(this.state.stakedAstronauts.map(async (astronaut) => await this.calculateReward(astronaut)));
-    //     let totalRewards = Number(rewardsArray.reduce((curr, nxt) => curr+nxt).toFixed(2));
-    //     this.setState({totalRewards});
-    //     setTimeout(()=>this.calculateTotalRewards(), 5000);
-    // }
-
     // Claimable, as give by the contract
     async calculatePendingRewards() {
         if(this.state.stakedAstronauts.length === 0) {
@@ -315,7 +303,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
             this.setState({web3:new Web3(window.ethereum)});
         }
         else {
-            
+            alert(`Metamask doesn't appear to be loaded. Please make sure you are using a web3 capable browser with metamask installed.`)
         }
     }
 
@@ -353,7 +341,6 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
 
     getMRBalance() {
         let moonRockBalance = this.state.moonRockBalance;
-        console.log(moonRockBalance);
         if(moonRockBalance == null || moonRockBalance == undefined) {
             return <div className={css.coverSpin}></div>
         }else {
@@ -363,7 +350,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
 
     getPendingRewards() {
         let pendingRewards = this.state.claimableRewards;
-        console.log(pendingRewards);
+
         if(pendingRewards == null || pendingRewards == undefined) {
             return <div className={css.coverSpin}></div>
         }else {

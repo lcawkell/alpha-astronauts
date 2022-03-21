@@ -26,7 +26,7 @@ export default function StakingContainer (props: IStakingContainerProps) {;
     <div className={css.wrapper}>
       <div className={`${css.container} ${loadingClass} ${css.containerSizing}`}>
         <div className={css.stakingInfo}>
-            <h3 className={css.title}>{props.title}</h3>
+            <span className={css.titleContainer}><h3 className={css.title}>{props.title}</h3><span className={css.astroDisplay}>({props.children.length})</span></span>
             <span>{props.details}</span>
         </div>
         <div className={`${css.containerScroll} ${css.scrollbar}`}>
