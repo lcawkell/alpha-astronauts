@@ -8,7 +8,7 @@ module.exports = merge(baseConfig, {
     mode:"production",
     output: {
         filename: "[name].js",
-        path: path.resolve(__dirname, "client", "out", "scripts")
+        path: path.resolve(__dirname, "client", "dist", "scripts")
     },
     // devtool:'source-map',
     plugins: [

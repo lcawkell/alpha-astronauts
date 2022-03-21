@@ -41,7 +41,6 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
     loadAstronauts(): Promise<void>;
     getAstronautHarvestTimes(stakedAstronauts: Astronaut[]): Promise<Astronaut[]>;
     loadAstronaut(tokenId: string): Promise<Astronaut>;
-    calculateTotalRewards(): Promise<void>;
     calculatePendingRewards(): Promise<void>;
     calculateReward(astronaut: Astronaut): Promise<number>;
     requestReward(astronaut: Astronaut): Promise<any>;

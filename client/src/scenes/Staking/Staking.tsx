@@ -84,7 +84,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
         if(this.state.connected) {
             await this.isApprovedForAll();
             await this.loadAstronauts();
-            this.calculateTotalRewards();
+            // this.calculateTotalRewards();
             this.calculatePendingRewards();
             this.calculateMRBalance();
             return;
@@ -108,7 +108,8 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
     async onClickHarvestAll() {
         try {
             await this.state.stakeContract.methods.harvestBatch(this.state.account).send({
-                from: this.state.account
+                from: this.state.account,
+                gas: 500000
             });
         }catch(e) {
             console.log("Harvest Batch Failed");
@@ -133,7 +134,8 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
 
         try {
             await this.state.stakeContract.methods.unstakeBatch(this.state.selectedStakedAstronauts).send({
-                from: this.state.account
+                from: this.state.account,
+                gas: 500000
             });
         }catch(e) {
             // Unstaking failed
@@ -168,7 +170,8 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
 
     async approveAstros() {
         await this.state.astroContract.methods.setApprovalForAll(MOONROCK_CONTRACT_ADDRESS, 1).send({
-            from: this.state.account
+            from: this.state.account,
+            gas: 500000
         });
     }
 
@@ -184,7 +187,8 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
 
         try {
             await this.state.stakeContract.methods.stakeBatch(this.state.selectedAstronauts).send({
-                from: this.state.account
+                from: this.state.account,
+                gas: 500000
             });
         }catch(e) {
             // Staking failed
@@ -254,15 +258,20 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
         });
     }
 
-    async calculateTotalRewards() {
-        let rewardsArray = await Promise.all(this.state.stakedAstronauts.map(async (astronaut) => await this.calculateReward(astronaut)));
-        let totalRewards = Number(rewardsArray.reduce((curr, nxt) => curr+nxt).toFixed(2));
-        this.setState({totalRewards});
-        setTimeout(()=>this.calculateTotalRewards(), 5000);
-    }
+    // async calculateTotalRewards() {
+    //     if(this.state.stakedAstronauts.length === 0) return 0;
+    //     let rewardsArray = await Promise.all(this.state.stakedAstronauts.map(async (astronaut) => await this.calculateReward(astronaut)));
+    //     let totalRewards = Number(rewardsArray.reduce((curr, nxt) => curr+nxt).toFixed(2));
+    //     this.setState({totalRewards});
+    //     setTimeout(()=>this.calculateTotalRewards(), 5000);
+    // }
 
     // Claimable, as give by the contract
     async calculatePendingRewards() {
+        if(this.state.stakedAstronauts.length === 0) {
+            this.setState({claimableRewards:0});
+            return;
+        }
         let rewardsArray = await Promise.all(this.state.stakedAstronauts.map(async (astronaut) => await this.requestReward(astronaut)));
         let pendingRewards = rewardsArray.reduce((curr, nxt) => Number(curr)+Number(nxt));
         pendingRewards = pendingRewards / 1000000000000000000;

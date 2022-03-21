@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { JsxAttributeLike } from 'typescript';
 import Button from '../Button';
 import * as css from './StakingContainer.css';
 
