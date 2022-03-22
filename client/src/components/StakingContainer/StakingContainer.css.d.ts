@@ -3,6 +3,7 @@ declare namespace StakingContainerCssNamespace {
     actions: string;
     astroDisplay: string;
     button: string;
+    buttonDisabled: string;
     container: string;
     containerInner: string;
     containerScroll: string;

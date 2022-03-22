@@ -122,6 +122,13 @@
     outline: 1px solid #fff!important;
 }
 
+.buttonDisabled {
+    background-color: #cccccc!important;
+    color: #666666!important;
+    cursor: not-allowed;
+    outline: 1px solid #fff!important;
+}
+
 .pending {
     z-index: 5;
     background: rgb(#000, #000, #000, 50%);

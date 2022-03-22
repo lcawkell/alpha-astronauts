@@ -13,14 +13,26 @@ export interface IStakingContainerProps {
 export interface IStakingContainerAction {
   name: string;
   action: () => void;
+  visible?: boolean;
+  enabled?:boolean;
 }
 
-export default function StakingContainer (props: IStakingContainerProps) {;
-  let loadingClass = props.loading? css.loadingContainer : css.loadedContainer;
+export default function StakingContainer (props: IStakingContainerProps) {
+    let loadingClass = props.loading? css.loadingContainer : css.loadedContainer;
 
-  let content = props.loading ? <div className={css.pending}><div className={css.coverSpin}></div></div> : props.children;
+    let content = props.loading ? <div className={css.pending}><div className={css.coverSpin}></div></div> : props.children;
 
-  let actions = (props.actions !== undefined && props.actions.length > 0) ? props.actions.map(action => <Button style={css.button} onClick={()=>action.action()}>{action.name}</Button>) : '';
+    let actions = (props.actions !== undefined && props.actions.length > 0) ? props.actions.map(action =>  {
+
+        let isVisible = (typeof action.visible) === 'undefined' ? true : action.visible;
+        let isEnabled = (typeof action.enabled) === 'undefined' ? true : action.enabled;
+        
+        let buttonCss = isEnabled ? css.button : css.buttonDisabled;
+        let buttonAction = isEnabled ? action.action : () => {console.log("dis be dis-abled")};
+        
+        return (isVisible ? <Button style={buttonCss} onClick={()=>buttonAction()}>{action.name}</Button> : '')
+    
+    }) : '';
   
   return (
     <div className={css.wrapper}>

@@ -8,5 +8,7 @@ export interface IStakingContainerProps {
 export interface IStakingContainerAction {
     name: string;
     action: () => void;
+    visible?: boolean;
+    enabled?: boolean;
 }
 export default function StakingContainer(props: IStakingContainerProps): JSX.Element;

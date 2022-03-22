@@ -30,6 +30,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
     constructor(props: IStakingProps);
     componentWillMount(): Promise<void>;
     componentDidMount(): Promise<void>;
+    init(): Promise<void>;
     loadDAPP: () => Promise<void>;
     isApprovedForAll(): Promise<void>;
     onClickApproveOrStake(): Promise<void>;
@@ -38,6 +39,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
     onClickStakeAll(): Promise<void>;
     approveAstros(): Promise<void>;
     stakeSelectedAstros(): Promise<void>;
+    stakeOneSelected(): Promise<void>;
     loadAstronauts(): Promise<void>;
     getAstronautHarvestTimes(stakedAstronauts: Astronaut[]): Promise<Astronaut[]>;
     loadAstronaut(tokenId: string): Promise<Astronaut>;
@@ -50,6 +52,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
     connectToWallet(): Promise<void>;
     checkWeb3Connection: () => Promise<void>;
     loadBlockchainData(account: string): Promise<void>;
+    switchNetwork(): Promise<void>;
     calculateMRBalance(): Promise<void>;
     getMRBalance(): JSX.Element;
     getPendingRewards(): JSX.Element;

@@ -11,14 +11,14 @@ import * as cssStyles from './Button.css';
 
 
 interface ButtonProps {
-    onClick?: () => void,
-    children?: any,
-    style?:string,
-    activeStyle?:string,
-    active?: boolean,
-    primary?: boolean,
-    buttonRef?: any,
-    id?: string
+    onClick?: () => void;
+    children?: any;
+    style?:string;
+    activeStyle?:string;
+    active?: boolean;
+    primary?: boolean;
+    buttonRef?: any;
+    id?: string;
 }
 
 interface ButtonState {
@@ -39,14 +39,14 @@ export interface IconButtonProps {
 }
 
 export interface CheckButtonProps {
-    disabled?: boolean,
-    index?: number,
-    checked?: boolean,
-    value?: string|number,
-    onClick: (index:number) => void,
-    singular: boolean,
-    key:string|number, 
-    styles?: string
+    disabled?: boolean;
+    index?: number;
+    checked?: boolean;
+    value?: string|number;
+    onClick: (index:number) => void;
+    singular: boolean;
+    key:string|number; 
+    styles?: string;
 }
 export default class Button extends React.Component<ButtonProps, ButtonState> {
     public readonly state: ButtonState = {
@@ -108,7 +108,7 @@ export default class Button extends React.Component<ButtonProps, ButtonState> {
 
         return (
             <button 
-                type="button" 
+                type="button"
                 id={this.props.id}
                 className={`${rootStyles} ${this.props.style} ${rootPermActive}`}
                 onMouseEnter={()=>this.isHovering(true)} 

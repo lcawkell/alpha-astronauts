@@ -61,9 +61,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
     }
 
     async componentWillMount() {
-        await this.loadWeb3();
-        await this.checkWeb3Connection();
-        window.ethereum.on('accountsChanged', this.checkWeb3Connection);
+        await this.init();
     }
 
     async componentDidMount() {
@@ -76,6 +74,12 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
 
         this.toggleAstronautSelected = this.toggleAstronautSelected.bind(this);
         this.toggleStakedAstronautSelected = this.toggleStakedAstronautSelected.bind(this);
+    }
+
+    async init() {
+        await this.loadWeb3();
+        await this.checkWeb3Connection();
+        window.ethereum.on('accountsChanged', this.checkWeb3Connection);
     }
 
     loadDAPP = async () => {
@@ -106,7 +110,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
         try {
             await this.state.stakeContract.methods.harvestBatch(this.state.account).send({
                 from: this.state.account,
-                gas: 500000
+                gas: 4000000
             });
         }catch(e) {
             console.log("Harvest Batch Failed");
@@ -131,7 +135,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
         try {
             await this.state.stakeContract.methods.unstakeBatch(this.state.selectedStakedAstronauts).send({
                 from: this.state.account,
-                gas: 500000
+                gas: 4000000
             });
         }catch(e) {
             // Unstaking failed
@@ -167,7 +171,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
     async approveAstros() {
         await this.state.astroContract.methods.setApprovalForAll(MOONROCK_CONTRACT_ADDRESS, 1).send({
             from: this.state.account,
-            gas: 500000
+            gas: 1000000
         });
     }
 
@@ -184,7 +188,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
         try {
             await this.state.stakeContract.methods.stakeBatch(this.state.selectedAstronauts).send({
                 from: this.state.account,
-                gas: 500000
+                gas: 4000000
             });
         }catch(e) {
             // Staking failed
@@ -205,6 +209,36 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
             astronauts = astronauts.filter(astronaut => astronaut.edition !== astronautEdition);
         });
         
+
+        this.setState({
+            selectedAstronauts: [],
+            stakedAstronauts: stakedAstronauts,
+            astronauts: astronauts,
+            pendingActionAstros: []
+        });
+    }
+
+    async stakeOneSelected() {
+        this.setState({stakingValidationMessage:'', pendingActionAstros:this.state.selectedAstronauts});
+
+        let movingAstro = this.state.selectedAstronauts[0];
+
+        try {
+            await this.state.stakeContract.methods.stake(movingAstro).send({
+                from: this.state.account,
+                gas: 1000000
+            });
+        }catch(e) {
+            // Staking failed
+            this.setState({pendingActionAstros: []});
+            return;
+        }
+
+        let stakedAstronauts = this.state.stakedAstronauts.map(stakedAstronaut => Object.assign({},stakedAstronaut));
+        let astronauts = this.state.astronauts.map(astronaut => Object.assign({},astronaut));
+
+        stakedAstronauts.push(this.state.astronauts.filter(astro => astro.edition === movingAstro)[0]);
+        astronauts = astronauts.filter(astronaut => astronaut.edition !== movingAstro);
 
         this.setState({
             selectedAstronauts: [],
@@ -332,6 +366,28 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
     async loadBlockchainData(account:string) {
         this.setState({account: account})
         const networkId = await this.state.web3.eth.net.getId()
+        console.log("Network ID: " + networkId);
+        if(networkId !== 137) {
+            await this.switchNetwork();
+        }
+    }
+
+    async switchNetwork() {
+        // workaround because TypeScript doesn't seem to think request exists on currentProvider
+        let currentProvider = (this.state.web3.currentProvider) as any;
+
+        try{
+            await currentProvider.request({ 
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: '0x89' }]
+            });
+        } catch {
+            alert(`Unable to switch your network. Please change to the polygon network to use this app.`)
+            return;
+        }
+
+        await this.init();
+        await this.loadDAPP();
     }
 
     async calculateMRBalance() {
@@ -362,11 +418,13 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
         return [
             {
                 name: 'Unstake Selected',
-                action: ()=>this.onClickUnstakeSelected()
+                action: ()=>this.onClickUnstakeSelected(),
+                visible: this.state.isApproved
             },
             {
                 name: 'Harvest All',
-                action: ()=>this.onClickHarvestAll()
+                action: ()=>this.onClickHarvestAll(),
+                visible: this.state.isApproved
             }
         ];
     }
@@ -378,8 +436,15 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
                 action: ()=>this.onClickApproveOrStake()
             },
             {
+                name: 'Stake One Selected',
+                action: ()=>this.stakeOneSelected(),
+                visible: this.state.isApproved,
+                enabled: this.state.selectedAstronauts.length === 1
+            },
+            {
                 name: 'Stake All',
-                action: ()=>this.onClickStakeAll()
+                action: ()=>this.onClickStakeAll(),
+                visible: this.state.isApproved
             }
         ];
     }
