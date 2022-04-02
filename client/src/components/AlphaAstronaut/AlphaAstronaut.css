@@ -1,4 +1,5 @@
 .imageContainer {
+    min-height: 100px;
     height: 100%;
     padding: 10px;
 }
@@ -24,6 +25,7 @@
 .img {
     height: 100%;
     width: 90px;
+    position: relative;
 }
 
 .imageContainerInner:hover {
@@ -41,6 +43,22 @@
     left: 0px;
     font-size: 12px;
     background-color: rgba(0,0,0,.5);
+}
+
+.mutant {
+    position: absolute;
+}
+
+.notSelectedMutant {
+    width: 115px;
+    top: -12px;
+    left: -13px;
+}
+
+.selectedMutant {
+    width: 120px;
+    top: -15px;
+    left: -16px;
 }
 
 .pending {

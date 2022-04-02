@@ -1,6 +1,7 @@
 export interface Astronaut {
     name: string;
     description: string;
+    isMutant?: boolean;
     image: string;
     dna: string;
     edition: number;

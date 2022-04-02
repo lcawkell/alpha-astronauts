@@ -9,7 +9,7 @@
     flex-direction: column;
 }
 
-@media only screen and (min-width : 992px) {
+@media only screen and (min-width : 1400px) {
     .container {
         justify-content: space-between;
         align-content: space-between;

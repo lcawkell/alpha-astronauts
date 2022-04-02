@@ -7,11 +7,13 @@ export interface IAlphaAstronautProps extends Astronaut {
   onClick?: (edition:number) => void;
   isStaked: boolean;
   isPending: boolean;
+  isMutant?: boolean;
 }
 
 export function AlphaAstronaut (props: IAlphaAstronautProps) {
 
   let selectedCSS = props.selected ? css.selected : css.notSelected;
+  let selectedMutant = props.selected ? css.selectedMutant : css.notSelectedMutant;
 
   function onClick() {
       props.onClick(props.edition);
@@ -19,10 +21,12 @@ export function AlphaAstronaut (props: IAlphaAstronautProps) {
 
   let isStakedClass = props.isStaked ? '' : '';
   let isPendingLoading = props.isPending ? <div className={css.pending}><div className={css.coverSpin}></div></div> : '';
+  let isMutant = props.isMutant ? <img className={`${css.mutant} ${selectedMutant}`} src='mutant-frame.png' /> : '';
 
   return (
     <div className={css.imageContainer}>
         <div className={`${css.imageContainerInner} ${selectedCSS}`} onClick={()=>onClick()}>
+            {isMutant}
             <img src={props.image} className={css.img} />
             {isPendingLoading}
             <p className={css.description}>#{props.edition}</p>

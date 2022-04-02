@@ -5,9 +5,12 @@ declare namespace AlphaAstronautCssNamespace {
     imageContainer: string;
     imageContainerInner: string;
     img: string;
+    mutant: string;
     notSelected: string;
+    notSelectedMutant: string;
     pending: string;
     selected: string;
+    selectedMutant: string;
     spin: string;
   }
 }
