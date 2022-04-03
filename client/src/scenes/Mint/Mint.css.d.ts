@@ -7,7 +7,9 @@ declare namespace MintCssNamespace {
     coverSpin: string;
     headingContainer: string;
     hiddenContainer: string;
+    input: string;
     mint: string;
+    mintContainer: string;
     rewards: string;
     root: string;
     spin: string;

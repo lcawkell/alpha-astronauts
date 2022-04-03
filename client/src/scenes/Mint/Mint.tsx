@@ -357,7 +357,10 @@ export default class Mint extends Component<MintProps, MintState> {
     async mintMutantWithMoonrocks() {
         if(this.state.mutantsToMint > 10) return;
         if(this.state.mutantsToMint < 1) return;
-        await this.state.mutantContract.methods.altMint(this.state.mutantsToMint, MOONROCK_CONTRACT_ADDRESS).call();
+        await this.state.mutantContract.methods.altMint(this.state.mutantsToMint, MOONROCK_CONTRACT_ADDRESS).send({
+            from: this.state.account,
+            gas: 1000000
+        });
         this.getMutantsMinted();
     }
 
@@ -476,12 +479,19 @@ export default class Mint extends Component<MintProps, MintState> {
 
     public renderDAPP() {
         let containerHideCss = (!this.state.loading && this.state.connected) ? '' : css.hiddenContainer;
-        let MintButton = this.state.isApproved ? <div><div>How many do you want to mint? (max 10)<br/><input max={10} value={this.state.mutantsToMint} onChange={(event)=>this.updateMutantsToMint(event.target.value)} /></div><br/><button onClick={()=>this.mintMutantWithMoonrocks()}>Mint</button></div> : <button onClick={()=>this.approveMoonrock()}>Approve Moonrocks</button>
+        let MintButton = this.state.isApproved ? <div className={css.mintContainer}>
+            <div style={{color:'white', fontSize:'20px', fontWeight:700}}>{`Minted ${this.state.totalMinted}/7777`}</div>
+            <br />
+            <div style={{display:'flex', justifyItems: 'center', flexDirection:'column', color:'#fff'}}>How many do you want to mint? (max 10)
+                <br/>
+                <input className={css.input} type='number' max='10' value={this.state.mutantsToMint} onChange={(event)=>this.updateMutantsToMint(event.target.value)} />
+            </div>
+            <br/>
+            <button className={css.button} onClick={()=>this.mintMutantWithMoonrocks()}>Mint</button></div> : <button className={css.button} onClick={()=>this.approveMoonrock()}>Approve Moonrocks</button>
         return (<div className={`${css.container} ${containerHideCss}`}>
 
             <WalletConnector account={this.state.account} />
-            <div style={{color:'white', fontSize:'20px', fontWeight:700}}>{`Minted ${this.state.totalMinted}/7777`}</div>
-            <br />
+
             {MintButton}
 
         </div>);
