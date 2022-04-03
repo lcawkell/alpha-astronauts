@@ -20,6 +20,11 @@
     outline: 1px solid #fff!important;
     width: 150px;
     height: 50px;
+    cursor: pointer;
+}
+
+.button:hover {
+    transform:scale(1.1);
 }
 
 .input {
