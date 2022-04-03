@@ -253,18 +253,18 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
 
     async loadAstronauts() {
         let astronautsToLoad = await this.state.astroContract.methods.walletOfOwner(this.state.account).call();
-        let mutantsToLoad = await this.state.mutantContract.methods.walletOfOwner(this.state.account).call();
+        // let mutantsToLoad = await this.state.mutantContract.methods.walletOfOwner(this.state.account).call();
         let stakedAstronautsToLoad = await this.state.stakeContract.methods.stakedNFTSByUser(this.state.account).call();
-        let stakedMutantsToLoad = await this.state.stakeContract.methods.stakedNFTSByUser(this.state.account).call();
+        // let stakedMutantsToLoad = await this.state.stakeContract.methods.stakedNFTSByUser(this.state.account).call();
 
         let allAstronauts:Astronaut[] = await Promise.all(astronautsToLoad.map(async (astronaut) => this.loadAstronaut(astronaut)));
-        let allMutants:Astronaut[] = await Promise.all(mutantsToLoad.map(async (mutant) => this.loadMutant(mutant)));
+        // let allMutants:Astronaut[] = await Promise.all(mutantsToLoad.map(async (mutant) => this.loadMutant(mutant)));
         let stakedAstronauts:Astronaut[] = await Promise.all(stakedAstronautsToLoad.filter(astronaut => astronaut > 0).map(async (astronaut) => this.loadAstronaut(astronaut)));
-        let stakedMutants:Astronaut[] = await Promise.all(stakedMutantsToLoad.filter(mutant => mutant > 0).map(async (mutant) => this.loadMutant(mutant)));
+        // let stakedMutants:Astronaut[] = await Promise.all(stakedMutantsToLoad.filter(mutant => mutant > 0).map(async (mutant) => this.loadMutant(mutant)));
 
-        stakedAstronauts = await this.getAstronautHarvestTimes(stakedAstronauts.concat(stakedMutants));
+        stakedAstronauts = await this.getAstronautHarvestTimes(stakedAstronauts);
 
-        this.setState({astronauts:allAstronauts.concat(allMutants), stakedAstronauts: stakedAstronauts.concat(stakedMutants)}, ()=> {
+        this.setState({astronauts:allAstronauts, stakedAstronauts: stakedAstronauts}, ()=> {
             this.setState({stakedContainerLoading: false, astroContainerLoading: false});
         });
     }
@@ -301,23 +301,23 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
         });
     }
 
-    async loadMutant(tokenId:string):Promise<Astronaut> {
-        return new Promise(async (resolve) => {
-            let uri:string = await this.state.mutantContract.methods.tokenURI(tokenId).call();
-            let content:Astronaut = await(await fetch(uri.replace('ipfs://', 'https://ipfs.io/ipfs/'))).json();
-            let image = await content.image.replace('ipfs://', 'https://ipfs.io/ipfs/');
-            resolve({
-                name: content.name,
-                description: content.description,
-                edition: content.edition,
-                isMutant: true,
-                date: content.date,
-                attributes: content.attributes,
-                dna: content.dna,
-                image: image
-            });
-        });
-    }
+    // async loadMutant(tokenId:string):Promise<Astronaut> {
+    //     return new Promise(async (resolve) => {
+    //         let uri:string = await this.state.mutantContract.methods.tokenURI(tokenId).call();
+    //         let content:Astronaut = await(await fetch(uri.replace('ipfs://', 'https://ipfs.io/ipfs/'))).json();
+    //         let image = await content.image.replace('ipfs://', 'https://ipfs.io/ipfs/');
+    //         resolve({
+    //             name: content.name,
+    //             description: content.description,
+    //             edition: content.edition,
+    //             isMutant: true,
+    //             date: content.date,
+    //             attributes: content.attributes,
+    //             dna: content.dna,
+    //             image: image
+    //         });
+    //     });
+    // }
 
     // Claimable, as give by the contract
     async calculatePendingRewards() {

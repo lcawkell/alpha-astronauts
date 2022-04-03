@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import Staking from './scenes/Staking';
+import Mint from './scenes/Mint/Mint';
+import Home from './scenes/Home/Home';
 import * as css from './AlphaAstronauts.css'
 
 import {
@@ -26,7 +28,9 @@ class AlphaAstronauts extends React.Component<{}, {}> {
             <div className={css.root}>
                 <Router>
                     <Switch>
-                        <Route path='/' exact={true} component={()=><Staking />} />
+                        <Route path='/' exact={true} component={()=><Home />} />
+                        <Route path='/Staking' exact={true} component={() => <Staking />} />
+                        <Route path='/Mint' exact={true} component={() => <Mint />} />
                     </Switch>
                 </Router>
             </div>
