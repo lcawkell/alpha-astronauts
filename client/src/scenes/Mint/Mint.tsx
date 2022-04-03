@@ -1,7 +1,7 @@
 import css from './Mint.css';
 import Web3 from 'web3';
 import { Contract } from "web3-eth-contract";
-import { AlphaAstroABI, AlphaStakeABI } from '../../contracts/ABI/AlphaAstroABI';
+import { AlphaAstroABI, AlphaStakeABI, MutantABI } from '../../contracts/ABI/AlphaAstroABI';
 import { AlphaAstronaut as AlphaAstronaut } from '../../components/AlphaAstronaut/AlphaAstronaut';
 import StakingContainer, { IStakingContainerAction } from '../../components/StakingContainer';
 import Button from '../../components/Button';
@@ -9,7 +9,7 @@ import { Astronaut as Astronaut } from '../../types';
 
 const MOONROCK_CONTRACT_ADDRESS = '0x30947d2Cc30335ecFb302115688a805487A2dD6F';
 const ASTRO_CONTRACT_ADDRESS = '0x52e037160C70bE63c1f79dd507E4879C032207d0';
-const MUTANT_CONTRACT_ADDRESS = '0x52e037160C70bE63c1f79dd507E4879C032207d0';
+const MUTANT_CONTRACT_ADDRESS = '0x07eE7174C063E51D559906995A2FC1E2c05727EE';
 
 import React, { Component } from 'react'
 
@@ -36,6 +36,8 @@ type MintState = {
     stakedContainerLoading: boolean;
     astroContainerLoading: boolean;
     moonRockBalance?: number;
+    mutantsToMint: number;
+    totalMinted: number;
 }
 
 declare let window:any;
@@ -57,7 +59,9 @@ export default class Mint extends Component<MintProps, MintState> {
             pendingActionAstros: [],
             loading: true,
             stakedContainerLoading: true,
-            astroContainerLoading: true
+            astroContainerLoading: true,
+            mutantsToMint: 1,
+            totalMinted: 0
         }
     }
 
@@ -68,7 +72,7 @@ export default class Mint extends Component<MintProps, MintState> {
     async componentDidMount() {
         let stakeContract = new this.state.web3.eth.Contract(AlphaStakeABI, MOONROCK_CONTRACT_ADDRESS);
         let astroContract = new this.state.web3.eth.Contract(AlphaAstroABI, ASTRO_CONTRACT_ADDRESS);
-        let mutantContract = new this.state.web3.eth.Contract(AlphaAstroABI, MUTANT_CONTRACT_ADDRESS);
+        let mutantContract = new this.state.web3.eth.Contract(MutantABI, MUTANT_CONTRACT_ADDRESS);
 
         this.setState({stakeContract, astroContract, mutantContract},async ()=>{
             this.loadDAPP();
@@ -76,6 +80,7 @@ export default class Mint extends Component<MintProps, MintState> {
 
         this.toggleAstronautSelected = this.toggleAstronautSelected.bind(this);
         this.toggleStakedAstronautSelected = this.toggleStakedAstronautSelected.bind(this);
+        this.isApprovedForMoonrocks = this.isApprovedForMoonrocks.bind(this);
     }
 
     async init() {
@@ -86,10 +91,8 @@ export default class Mint extends Component<MintProps, MintState> {
 
     loadDAPP = async () => {
         if(this.state.connected) {
-            await this.isApprovedForAll();
-            await this.loadAstronauts();
-            this.calculatePendingRewards();
-            this.calculateMRBalance();
+            this.isApprovedForMoonrocks();
+            this.getMutantsMinted();
             return;
         }
         setTimeout(()=>this.loadDAPP(), 500);
@@ -98,6 +101,12 @@ export default class Mint extends Component<MintProps, MintState> {
     async isApprovedForAll() {
         let isApproved = await this.state.astroContract.methods.isApprovedForAll(this.state.account, MOONROCK_CONTRACT_ADDRESS).call();
         this.setState({isApproved});
+    }
+
+    async isApprovedForMoonrocks() {
+        let isApproved = await this.state.stakeContract.methods.allowance(this.state.account, MUTANT_CONTRACT_ADDRESS).call();
+        console.log(isApproved);
+        this.setState({isApproved:isApproved>=200000000000000000000});
     }
 
     async onClickApproveOrStake() {
@@ -172,6 +181,13 @@ export default class Mint extends Component<MintProps, MintState> {
 
     async approveAstros() {
         await this.state.astroContract.methods.setApprovalForAll(MOONROCK_CONTRACT_ADDRESS, 1).send({
+            from: this.state.account,
+            gas: 1000000
+        });
+    }
+
+    async approveMoonrock() {
+        await this.state.stakeContract.methods.approve(MUTANT_CONTRACT_ADDRESS, '100000000000000000000000').send({
             from: this.state.account,
             gas: 1000000
         });
@@ -271,11 +287,9 @@ export default class Mint extends Component<MintProps, MintState> {
     async getAstronautHarvestTimes(stakedAstronauts:Astronaut[]):Promise<Astronaut[]> {
         return await Promise.all(stakedAstronauts.map(async (stakedAstronaut) => {
             let stakeLog = null;
-            if(stakedAstronaut.isMutant) {
-                await this.state.stakeContract.methods.stakeLog(this.state.account, stakedAstronaut.edition).call();
-            } else {
-                await this.state.stakeContract.methods.stakeLog(this.state.account, stakedAstronaut.edition).call();
-            }
+
+            stakeLog = await this.state.stakeContract.methods.stakeLog(this.state.account, stakedAstronaut.edition).call();
+
             stakedAstronaut.stakedOnBlock = stakeLog.stakedAtBlock;
             stakedAstronaut.claimedOnBlock = stakeLog.lastHarvestBlock;
             return stakedAstronaut;
@@ -340,6 +354,15 @@ export default class Mint extends Component<MintProps, MintState> {
         return await this.state.stakeContract.methods.pendingRewards(this.state.account, astronaut.edition).call();
     }
 
+    async mintMutantWithMoonrocks() {
+        if(this.state.mutantsToMint > 10) return;
+        if(this.state.mutantsToMint < 1) return;
+        await this.state.mutantContract.methods.altMint(this.state.mutantsToMint, MOONROCK_CONTRACT_ADDRESS).call();
+        this.getMutantsMinted();
+    }
+
+    updateMutantsToMint = (value) => this.setState({mutantsToMint:value});
+
     toggleAstronautSelected(edition:number) {
         let selectedAstronauts = this.state.selectedAstronauts.map(selectedAstronaut => selectedAstronaut);
         let selectedIndex = this.state.selectedAstronauts.indexOf(edition);
@@ -391,6 +414,11 @@ export default class Mint extends Component<MintProps, MintState> {
             }
         });
 
+    }
+
+    getMutantsMinted = async () => {
+        let totalMinted = await this.state.mutantContract.methods.totalSupply().call();
+        this.setState({totalMinted});
     }
 
     async loadBlockchainData(account:string) {
@@ -448,9 +476,13 @@ export default class Mint extends Component<MintProps, MintState> {
 
     public renderDAPP() {
         let containerHideCss = (!this.state.loading && this.state.connected) ? '' : css.hiddenContainer;
+        let MintButton = this.state.isApproved ? <div><div>How many do you want to mint? (max 10)<br/><input max={10} value={this.state.mutantsToMint} onChange={(event)=>this.updateMutantsToMint(event.target.value)} /></div><br/><button onClick={()=>this.mintMutantWithMoonrocks()}>Mint</button></div> : <button onClick={()=>this.approveMoonrock()}>Approve Moonrocks</button>
         return (<div className={`${css.container} ${containerHideCss}`}>
 
             <WalletConnector account={this.state.account} />
+            <div style={{color:'white', fontSize:'20px', fontWeight:700}}>{`Minted ${this.state.totalMinted}/7777`}</div>
+            <br />
+            {MintButton}
 
         </div>);
     }

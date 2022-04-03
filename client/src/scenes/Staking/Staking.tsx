@@ -272,11 +272,9 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
     async getAstronautHarvestTimes(stakedAstronauts:Astronaut[]):Promise<Astronaut[]> {
         return await Promise.all(stakedAstronauts.map(async (stakedAstronaut) => {
             let stakeLog = null;
-            if(stakedAstronaut.isMutant) {
-                await this.state.stakeContract.methods.stakeLog(this.state.account, stakedAstronaut.edition).call();
-            } else {
-                await this.state.stakeContract.methods.stakeLog(this.state.account, stakedAstronaut.edition).call();
-            }
+
+            stakeLog = await this.state.stakeContract.methods.stakeLog(this.state.account, stakedAstronaut.edition).call();
+            
             stakedAstronaut.stakedOnBlock = stakeLog.stakedAtBlock;
             stakedAstronaut.claimedOnBlock = stakeLog.lastHarvestBlock;
             return stakedAstronaut;
