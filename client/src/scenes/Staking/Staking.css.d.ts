@@ -7,6 +7,7 @@ declare namespace StakingCssNamespace {
     coverSpin: string;
     headingContainer: string;
     hiddenContainer: string;
+    navButton: string;
     rewards: string;
     root: string;
     spin: string;

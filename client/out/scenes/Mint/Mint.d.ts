@@ -27,6 +27,7 @@ declare type MintState = {
     moonRockBalance?: number;
     mutantsToMint: number;
     totalMinted: number;
+    moonRockMintPrice: number;
 };
 export default class Mint extends Component<MintProps, MintState> {
     constructor(props: MintProps);
@@ -34,6 +35,7 @@ export default class Mint extends Component<MintProps, MintState> {
     componentDidMount(): Promise<void>;
     init(): Promise<void>;
     loadDAPP: () => Promise<void>;
+    getMoonRockMintPrice(): Promise<void>;
     isApprovedForAll(): Promise<void>;
     isApprovedForMoonrocks(): Promise<void>;
     onClickApproveOrStake(): Promise<void>;
@@ -51,6 +53,7 @@ export default class Mint extends Component<MintProps, MintState> {
     calculateReward(astronaut: Astronaut): Promise<number>;
     requestReward(astronaut: Astronaut): Promise<any>;
     mintMutantWithMoonrocks(): Promise<void>;
+    mintMutantWithMatic(): Promise<void>;
     updateMutantsToMint: (value: any) => void;
     toggleAstronautSelected(edition: number): void;
     toggleStakedAstronautSelected(edition: number): void;
