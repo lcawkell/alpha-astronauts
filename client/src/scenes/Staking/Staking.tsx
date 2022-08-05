@@ -485,7 +485,7 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
         return (
         <div style={{display:'flex', alignItems:'center', flexDirection:'column'}}>
             <img id="logo" alt="logo" src="/logo.png"></img>
-            <Link to={'/Mint'}><button className={css.navButton}>Mint Mutants!</button></Link>
+
             <div className={`${css.container} ${containerHideCss}`}>
                 
                 <WalletConnector account={this.state.account} />
