@@ -7,6 +7,7 @@ import css from './Staking.css';
 import StakingContainer, { IStakingContainerAction } from '../../components/StakingContainer';
 import Button from '../../components/Button';
 import { Astronaut as Astronaut } from '../../types';
+import { Link } from 'react-router-dom';
 
 const MOONROCK_CONTRACT_ADDRESS = '0x30947d2Cc30335ecFb302115688a805487A2dD6F';
 const ASTRO_CONTRACT_ADDRESS = '0x52e037160C70bE63c1f79dd507E4879C032207d0';
@@ -272,11 +273,9 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
     async getAstronautHarvestTimes(stakedAstronauts:Astronaut[]):Promise<Astronaut[]> {
         return await Promise.all(stakedAstronauts.map(async (stakedAstronaut) => {
             let stakeLog = null;
-            if(stakedAstronaut.isMutant) {
-                await this.state.stakeContract.methods.stakeLog(this.state.account, stakedAstronaut.edition).call();
-            } else {
-                await this.state.stakeContract.methods.stakeLog(this.state.account, stakedAstronaut.edition).call();
-            }
+
+            stakeLog = await this.state.stakeContract.methods.stakeLog(this.state.account, stakedAstronaut.edition).call();
+            
             stakedAstronaut.stakedOnBlock = stakeLog.stakedAtBlock;
             stakedAstronaut.claimedOnBlock = stakeLog.lastHarvestBlock;
             return stakedAstronaut;
@@ -483,19 +482,25 @@ export default class Home extends React.Component<IStakingProps, IStakingState> 
 
     public renderDAPP() {
         let containerHideCss = (!this.state.loading && this.state.connected) ? '' : css.hiddenContainer;
-        return (<div className={`${css.container} ${containerHideCss}`}>
+        return (
+        <div style={{display:'flex', alignItems:'center', flexDirection:'column'}}>
+            <img id="logo" alt="logo" src="/logo.png"></img>
+            <Link to={'/Mint'}><button className={css.navButton}>Mint Mutants!</button></Link>
+            <div className={`${css.container} ${containerHideCss}`}>
+                
+                <WalletConnector account={this.state.account} />
 
-            <WalletConnector account={this.state.account} />
+                <StakingContainer title='STAKED ASTRONAUTS' details={<span>Pending Rewards: <span style={{position:'relative'}}>{this.getPendingRewards()}</span></span>} loading={this.state.stakedContainerLoading} actions={this.getStakingContainerActions()}>
+                    {this.state.stakedAstronauts.map(astronaut => <AlphaAstronaut {...astronaut} isPending={this.state.pendingActionAstros.indexOf(astronaut.edition) > -1} selected={this.state.selectedStakedAstronauts.indexOf(astronaut.edition) > -1} onClick={this.toggleStakedAstronautSelected} isStaked={true} />)}
+                </StakingContainer>
 
-            <StakingContainer title='STAKED ASTRONAUTS' details={<span>Pending Rewards: <span style={{position:'relative'}}>{this.getPendingRewards()}</span></span>} loading={this.state.stakedContainerLoading} actions={this.getStakingContainerActions()}>
-                {this.state.stakedAstronauts.map(astronaut => <AlphaAstronaut {...astronaut} isPending={this.state.pendingActionAstros.indexOf(astronaut.edition) > -1} selected={this.state.selectedStakedAstronauts.indexOf(astronaut.edition) > -1} onClick={this.toggleStakedAstronautSelected} isStaked={true} />)}
-            </StakingContainer>
+                <StakingContainer title='UNSTAKED ASTRONAUTS' details={<span>MR Balance: <span style={{position:'relative'}}>{this.getMRBalance()}</span></span>} loading={this.state.astroContainerLoading} actions={this.getAstroContainerActions()}>
+                    {this.state.astronauts.map(astronaut => <AlphaAstronaut {...astronaut} isPending={this.state.pendingActionAstros.indexOf(astronaut.edition) > -1} selected={this.state.selectedAstronauts.indexOf(astronaut.edition) > -1} onClick={this.toggleAstronautSelected} isStaked={false} />)}
+                </StakingContainer>
 
-            <StakingContainer title='UNSTAKED ASTRONAUTS' details={<span>MR Balance: <span style={{position:'relative'}}>{this.getMRBalance()}</span></span>} loading={this.state.astroContainerLoading} actions={this.getAstroContainerActions()}>
-                {this.state.astronauts.map(astronaut => <AlphaAstronaut {...astronaut} isPending={this.state.pendingActionAstros.indexOf(astronaut.edition) > -1} selected={this.state.selectedAstronauts.indexOf(astronaut.edition) > -1} onClick={this.toggleAstronautSelected} isStaked={false} />)}
-            </StakingContainer>
-
-        </div>);
+            </div>
+        </div>
+        );
     }
 
     renderWalletPrompt(connectToWallet) {

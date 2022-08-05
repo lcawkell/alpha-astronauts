@@ -25,6 +25,9 @@ declare type MintState = {
     stakedContainerLoading: boolean;
     astroContainerLoading: boolean;
     moonRockBalance?: number;
+    mutantsToMint: number;
+    totalMinted: number;
+    moonRockMintPrice: number;
 };
 export default class Mint extends Component<MintProps, MintState> {
     constructor(props: MintProps);
@@ -32,12 +35,15 @@ export default class Mint extends Component<MintProps, MintState> {
     componentDidMount(): Promise<void>;
     init(): Promise<void>;
     loadDAPP: () => Promise<void>;
+    getMoonRockMintPrice(): Promise<void>;
     isApprovedForAll(): Promise<void>;
+    isApprovedForMoonrocks(): Promise<void>;
     onClickApproveOrStake(): Promise<void>;
     onClickHarvestAll(): Promise<void>;
     onClickUnstakeSelected(): Promise<void>;
     onClickStakeAll(): Promise<void>;
     approveAstros(): Promise<void>;
+    approveMoonrock(): Promise<void>;
     stakeSelectedAstros(): Promise<void>;
     stakeOneSelected(): Promise<void>;
     loadAstronauts(): Promise<void>;
@@ -46,11 +52,15 @@ export default class Mint extends Component<MintProps, MintState> {
     calculatePendingRewards(): Promise<void>;
     calculateReward(astronaut: Astronaut): Promise<number>;
     requestReward(astronaut: Astronaut): Promise<any>;
+    mintMutantWithMoonrocks(): Promise<void>;
+    mintMutantWithMatic(): Promise<void>;
+    updateMutantsToMint: (value: any) => void;
     toggleAstronautSelected(edition: number): void;
     toggleStakedAstronautSelected(edition: number): void;
     loadWeb3(): Promise<void>;
     connectToWallet(): Promise<void>;
     checkWeb3Connection: () => Promise<void>;
+    getMutantsMinted: () => Promise<void>;
     loadBlockchainData(account: string): Promise<void>;
     switchNetwork(): Promise<void>;
     calculateMRBalance(): Promise<void>;

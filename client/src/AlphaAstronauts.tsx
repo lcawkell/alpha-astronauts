@@ -28,7 +28,7 @@ class AlphaAstronauts extends React.Component<{}, {}> {
             <div className={css.root}>
                 <Router>
                     <Switch>
-                        <Route path='/' exact={true} component={()=><Home />} />
+                        <Route path='/' exact={true} component={()=><Staking />} />
                         <Route path='/Staking' exact={true} component={() => <Staking />} />
                         <Route path='/Mint' exact={true} component={() => <Mint />} />
                     </Switch>
