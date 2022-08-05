@@ -6,14 +6,7 @@ module.exports = {
         alpha_astronauts: './client/src/AlphaAstronauts.tsx'
     },
     resolve: {
-        extensions: [".ts", ".tsx", ".js", ".json"],
-        fallback: {
-            "http": require.resolve("stream-http"),
-            "os": require.resolve("os-browserify/browser"),
-            "https": require.resolve("https-browserify"),
-            "crypto": require.resolve("crypto-browserify"),
-            "stream": require.resolve("stream-browserify")
-        }
+        extensions: [".ts", ".tsx", ".js", ".json"]
     },
     module: {
         rules: [
